@@ -1,42 +1,39 @@
-/**
- * Mobile Money Transaction Fee Estimator
- * Calculates fees for mobile money transfers in Kenya
- */
+#!/usr/bin/env node
 
-function estimateTransactionFee() {
-    // Constants for fee calculation
-    const FEE_PERCENTAGE = 0.015; // 1.5%
-    const MIN_FEE = 10;
-    const MAX_FEE = 70;
-    
-    // Prompt user for amount
-    const amountToSend = parseFloat(prompt("Unatuma Ngapi? (KES):"));
-    
-    // Validate input
-    if (isNaN(amountToSend)) {
-        console.log("Tafadhali weka kiasi halali.");
-        return;
-    }
-    
-    // Calculate fee
-    let calculatedFee = amountToSend * FEE_PERCENTAGE;
-    
-    // Apply minimum and maximum limits
-    if (calculatedFee < MIN_FEE) {
-        calculatedFee = MIN_FEE;
-    } else if (calculatedFee > MAX_FEE) {
-        calculatedFee = MAX_FEE;
-    }
-    
-    // Calculate total amount
-    const totalAmount = amountToSend + calculatedFee;
-    
-    // Display results
-    console.log(`Sending KES ${amountToSend}:`);
-    console.log(`Calculated Transaction Fee: KES ${calculatedFee}`);
-    console.log(`Total amount to be debited: KES ${totalAmount}\n`);
-    console.log("Send Money Securely!");
+const readline = require('readline');
+
+// Fee tiers
+function calculateTransactionFee(amount) {
+    if (amount <= 0) return 0;
+    if (amount <= 100) return 10;
+    if (amount <= 500) return 15;
+    if (amount <= 1000) return 25;
+    if (amount <= 2500) return 40;
+    if (amount <= 5000) return 60;
+    return 100;
 }
 
-// Call the function
-estimateTransactionFee();
+// CLI interface
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+rl.question("Karibu! Ingiza kiasi cha kutuma (KES): ", (input) => {
+    const amount = parseFloat(input);
+
+    if (isNaN(amount) || amount <= 0) {
+        console.log("Tafadhali ingiza kiasi halali zaidi ya sifuri.");
+        rl.close();
+        return;
+    }
+
+    const fee = calculateTransactionFee(amount);
+    const total = amount + fee;
+
+    console.log(`\nKiasi: KES ${amount.toFixed(2)}`);
+    console.log(`Ada ya muamala: KES ${fee.toFixed(2)}`);
+    console.log(`Jumla utakayolipa: KES ${total.toFixed(2)}\n`);
+
+    rl.close();
+});

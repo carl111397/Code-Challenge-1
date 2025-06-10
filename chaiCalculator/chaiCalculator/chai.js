@@ -1,4 +1,7 @@
-/**
+#!/usr/bin/env node
+const prompt = require("prompt-sync")();
+
+/** 
  * Chai Bora Ingredient Calculator
  * Calculates ingredients needed for making Kenyan chai
  */
@@ -8,7 +11,7 @@ function calculateChaiIngredients() {
     const numberOfCups = parseFloat(prompt("Karibu! How many cups of Chai Bora would you like to make?"));
     
     // Validate input
-    if (isNaN(numberOfCups) {
+    if (isNaN(numberOfCups)) {
         console.log("Please enter a valid number.");
         return;
     }
